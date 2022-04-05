@@ -7,6 +7,7 @@ class Game extends Component {
         this.state = {
             number: "",
             message: "",
+            arr: [],
             random: generateRandomNumber(100)
         }
 
@@ -40,13 +41,11 @@ class Game extends Component {
     handleOnClick = () => {
         const number = parseInt(this.state.number);
         const random = parseInt(this.state.random);
-        const text = calculateText(number, random);
+        const text = calculateText(number, random, this.state.arr.length);
         console.log(random);
 
-        /* Determina que si el número es diferente de random devuelve
-        number a su estado inicial 
-        de otro modo cuando ganas quiero que el número 
-        no vuelva a su estado inicial para que en el input se muestre el número con el que ganaste*/
+        this.state.arr.push(number);
+
         if (number !== random){
             this.setState({
                 number: "",
@@ -71,6 +70,7 @@ class Game extends Component {
                 />
                 <button onClick={this.handleOnClick}>Probar</button>
                 <h2 className={(this.state.message)&& 'flickering'}>{this.state.message}</h2>
+                <p>{this.state.arr + " "}</p>
             </div>
         );
     }
@@ -82,12 +82,12 @@ function generateRandomNumber(max, min=1) {
     return Math.floor(Math.random()*(max - min) + min);
 }
 
-function calculateText(number, random) {
+function calculateText(number, random, intentos) {
     const soClose = 5;
     const diff = Math.abs(random - number);
     
     if (number === random) {
-        return "Felicidades, lo has adivinado!!";
+        return "Felicidades, lo has adivinado!!" + " te tomo " + intentos + " intentos.";
     }
     
     if (diff < soClose) {
